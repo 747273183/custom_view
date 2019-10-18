@@ -3,7 +3,10 @@ package com.example.custom_view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -24,15 +27,17 @@ public class RoundProgressBar extends View {
 
     public RoundProgressBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initPaint();
+
         TypedArray typedArray=context.obtainStyledAttributes(attrs,R.styleable.RoundProgressBar);
          mRadius = (int) typedArray.getDimension(R.styleable.RoundProgressBar_radius, dp2px(30));
          mColor=typedArray.getColor(R.styleable.RoundProgressBar_color,0XFFFF0000);
          mLineWidth= (int) typedArray.getDimension(R.styleable.RoundProgressBar_line_width,dp2px(3));
          mTextSize= (int) typedArray.getDimension(R.styleable.RoundProgressBar_android_textSize,dp2px(16));
-         mProgress=typedArray.getInt(R.styleable.RoundProgressBar_android_progress,0);
+         mProgress=typedArray.getInt(R.styleable.RoundProgressBar_android_progress,30);
 
         typedArray.recycle();
+        //要放在这里,因为初始化之间要设置一些值
+        initPaint();
     }
 
     private void initPaint() {
@@ -99,8 +104,47 @@ public class RoundProgressBar extends View {
     //绘制
     @Override
     protected void onDraw(Canvas canvas) {
-        mPaint.setStyle(Paint.Style.STROKE);
+        //绘制一个圆
+        mPaint.setStyle(Paint.Style.STROKE);//设置画笔样式
+        mPaint.setStrokeWidth(mLineWidth*1.0f/4);
+        int width=getWidth();
+        int height=getHeight();
+        canvas.drawCircle(width/2,height/2,
+                width/2-getPaddingLeft()-mPaint.getStrokeWidth()/2,
+                mPaint);
 
+        //绘制一个圆弧
+        mPaint.setStrokeWidth(mLineWidth);
+        canvas.save();
+        canvas.translate(getPaddingLeft(),getPaddingTop());
+        float angle=mProgress*1.0f/100*360;
+        canvas.drawArc(new RectF(
+                0,
+                0,
+                width-getPaddingLeft()*2,
+            height-getPaddingLeft()*2),
+                0,
+                angle,
+                false,
+                mPaint);
+        canvas.restore();
+
+        //绘制文本
+        String mText=mProgress+"%";
+        mPaint.setStrokeWidth(0);
+        mPaint.setTextAlign(Paint.Align.CENTER);
+        mPaint.setTextSize(mTextSize);
+
+        int y=getHeight()/2;
+        Rect bound=new Rect();
+        mPaint.getTextBounds(mText,0,mText.length(),bound);
+        int textHeight=bound.height();
+        canvas.drawText(mText,0,mText.length(),getWidth()/2,y+textHeight/2,mPaint);
+
+
+        //画一个横线,辅助查看进度文本是不是在正中心
+        mPaint.setStrokeWidth(0);
+        canvas.drawLine(0,height/2,width,height/2,mPaint);
 
 
     }
