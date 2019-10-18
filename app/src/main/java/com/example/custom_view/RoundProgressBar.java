@@ -28,12 +28,12 @@ public class RoundProgressBar extends View {
     public RoundProgressBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray typedArray=context.obtainStyledAttributes(attrs,R.styleable.RoundProgressBar);
-         mRadius = (int) typedArray.getDimension(R.styleable.RoundProgressBar_radius, dp2px(30));
-         mColor=typedArray.getColor(R.styleable.RoundProgressBar_color,0XFFFF0000);
-         mLineWidth= (int) typedArray.getDimension(R.styleable.RoundProgressBar_line_width,dp2px(3));
-         mTextSize= (int) typedArray.getDimension(R.styleable.RoundProgressBar_android_textSize,dp2px(16));
-         mProgress=typedArray.getInt(R.styleable.RoundProgressBar_android_progress,30);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundProgressBar);
+        mRadius = (int) typedArray.getDimension(R.styleable.RoundProgressBar_radius, dp2px(30));
+        mColor = typedArray.getColor(R.styleable.RoundProgressBar_color, 0XFFFF0000);
+        mLineWidth = (int) typedArray.getDimension(R.styleable.RoundProgressBar_line_width, dp2px(3));
+        mTextSize = (int) typedArray.getDimension(R.styleable.RoundProgressBar_android_textSize, dp2px(16));
+        mProgress = typedArray.getInt(R.styleable.RoundProgressBar_android_progress, 30);
 
         typedArray.recycle();
         //要放在这里,因为初始化之间要设置一些值
@@ -41,7 +41,7 @@ public class RoundProgressBar extends View {
     }
 
     private void initPaint() {
-        mPaint=new Paint();
+        mPaint = new Paint();
         mPaint.setAntiAlias(true);//平滑字体,反锯齿
         mPaint.setColor(mColor);
 
@@ -89,16 +89,16 @@ public class RoundProgressBar extends View {
     }
 
     private int measureHeight() {
-        return 0;
+        return mRadius * 2;
     }
 
     private int measureWidth() {
-        return 0;
+        return mRadius * 2;
     }
 
     //dp转px
     private float dp2px(int dpVal) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpVal,getResources().getDisplayMetrics());
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, getResources().getDisplayMetrics());
     }
 
     //绘制
@@ -106,23 +106,23 @@ public class RoundProgressBar extends View {
     protected void onDraw(Canvas canvas) {
         //绘制一个圆
         mPaint.setStyle(Paint.Style.STROKE);//设置画笔样式
-        mPaint.setStrokeWidth(mLineWidth*1.0f/4);
-        int width=getWidth();
-        int height=getHeight();
-        canvas.drawCircle(width/2,height/2,
-                width/2-getPaddingLeft()-mPaint.getStrokeWidth()/2,
+        mPaint.setStrokeWidth(mLineWidth * 1.0f / 4);
+        int width = getWidth();
+        int height = getHeight();
+        canvas.drawCircle(width / 2, height / 2,
+                width / 2 - getPaddingLeft() - mPaint.getStrokeWidth() / 2,
                 mPaint);
 
         //绘制一个圆弧
         mPaint.setStrokeWidth(mLineWidth);
         canvas.save();
-        canvas.translate(getPaddingLeft(),getPaddingTop());
-        float angle=mProgress*1.0f/100*360;
+        canvas.translate(getPaddingLeft(), getPaddingTop());
+        float angle = mProgress * 1.0f / 100 * 360;
         canvas.drawArc(new RectF(
-                0,
-                0,
-                width-getPaddingLeft()*2,
-            height-getPaddingLeft()*2),
+                        0,
+                        0,
+                        width - getPaddingLeft() * 2,
+                        height - getPaddingLeft() * 2),
                 0,
                 angle,
                 false,
@@ -130,45 +130,54 @@ public class RoundProgressBar extends View {
         canvas.restore();
 
         //绘制文本
-        String mText=mProgress+"%";
+        String mText = mProgress + "%";
         mPaint.setStrokeWidth(0);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(mTextSize);
 
-        int y=getHeight()/2;
-        Rect bound=new Rect();
-        mPaint.getTextBounds(mText,0,mText.length(),bound);
-        int textHeight=bound.height();
-        canvas.drawText(mText,0,mText.length(),getWidth()/2,y+textHeight/2,mPaint);
+        int y = getHeight() / 2;
+        Rect bound = new Rect();
+        mPaint.getTextBounds(mText, 0, mText.length(), bound);
+        int textHeight = bound.height();
+        canvas.drawText(mText, 0, mText.length(), getWidth() / 2, y + textHeight / 2, mPaint);
 
 
         //画一个横线,辅助查看进度文本是不是在正中心
-        mPaint.setStrokeWidth(0);
-        canvas.drawLine(0,height/2,width,height/2,mPaint);
+//        mPaint.setStrokeWidth(0);
+//        canvas.drawLine(0,height/2,width,height/2,mPaint);
 
 
     }
 
+    //对外提供可以获得和设置进度的方法
+    public int getProgress() {
+        return mProgress;
+    }
+
+    public void setProgress(int mProgress) {
+        this.mProgress = mProgress;
+        invalidate();
+    }
 
     //状态存储
-    private static  final  String INSTANCE="instance";
-    private static  final  String KEY_PROGRESS="key_progress";
+    private static final String INSTANCE = "instance";
+    private static final String KEY_PROGRESS = "key_progress";
+
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
 
-        Bundle bundle=new Bundle();
-        bundle.putInt(KEY_PROGRESS,mProgress);
-        bundle.putParcelable(INSTANCE,super.onSaveInstanceState());
-        return  bundle;
+        Bundle bundle = new Bundle();
+        bundle.putInt(KEY_PROGRESS, mProgress);
+        bundle.putParcelable(INSTANCE, super.onSaveInstanceState());
+        return bundle;
     }
 
     //状态恢复
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle)
-        {
-            Bundle bundle= (Bundle) state;
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
             Parcelable parcelable = bundle.getParcelable(INSTANCE);
             super.onRestoreInstanceState(parcelable);
             mProgress = bundle.getInt(KEY_PROGRESS);

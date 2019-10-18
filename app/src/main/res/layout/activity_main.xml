@@ -7,11 +7,14 @@
     tools:context=".MainActivity">
 
     <com.example.custom_view.RoundProgressBar
-        android:id="@+id/testView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="#44FF0000"
+        android:id="@+id/id_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:padding="16dp"
+        android:progress="0"
+        android:textSize="18sp"
+        app:radius="60dp"
+        app:color="#00ff00"
         android:layout_centerInParent="true"
        />
 

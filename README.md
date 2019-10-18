@@ -36,8 +36,6 @@
     Paint.Style.FILL_AND_STROKE设置都绘制
 ![画笔的三种样式](/readme_img/a1.png)
 
-![文本绘制基线](/readme_img/a2.png)
-
 4.状态的存储与恢复
 
 ## 三.自定义属性声明与获取
