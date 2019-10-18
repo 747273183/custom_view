@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
@@ -122,6 +123,7 @@ public class TestView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         mText ="88888";
         invalidate();
+
 
         return true;//返回true,处理这个事件
     }

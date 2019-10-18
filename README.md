@@ -30,6 +30,11 @@
 
 
 3.绘制onDraw
+    
+    Paint.Style.FILL设置只绘制图形内容 
+    Paint.Style.STROKE设置只绘制图形的边 
+    Paint.Style.FILL_AND_STROKE设置都绘制
+    ![画笔的三种样式](a1.png)
 
 4.状态的存储与恢复
 
