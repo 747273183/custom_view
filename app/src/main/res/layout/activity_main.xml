@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <com.example.custom_view.TestView
+        android:id="@+id/testView"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:background="#7200BCD4"
