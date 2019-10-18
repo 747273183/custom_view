@@ -83,9 +83,11 @@ public class RoundProgressBar extends View {
             }
         }
 
+        //由于是一个圆,防止用户传入的宽和高不一致
+        width=Math.min(width,height);
         //设置测试后的值
-        setMeasuredDimension(width, height);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(width, width);
+
     }
 
     private int measureHeight() {
@@ -131,6 +133,7 @@ public class RoundProgressBar extends View {
 
         //绘制文本
         String mText = mProgress + "%";
+//        mText="慕课网";
         mPaint.setStrokeWidth(0);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(mTextSize);
@@ -139,6 +142,7 @@ public class RoundProgressBar extends View {
         Rect bound = new Rect();
         mPaint.getTextBounds(mText, 0, mText.length(), bound);
         int textHeight = bound.height();
+        //如果是中文的话 y=y + textHeight / 2-mPaint.descent()/2
         canvas.drawText(mText, 0, mText.length(), getWidth() / 2, y + textHeight / 2, mPaint);
 
 
